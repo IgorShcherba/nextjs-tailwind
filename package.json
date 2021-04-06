@@ -8,14 +8,31 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.0.0",
+    "date-fns": "^2.19.0",
     "next": "latest",
+    "next-redux-wrapper": "^6.0.2",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-datepicker": "^3.7.0",
+    "react-dom": "^17.0.1",
+    "react-dropzone": "^11.3.2",
+    "react-hook-form": "^7.0.1",
+    "react-input-mask": "^2.0.4",
+    "react-phone-input-2": "^2.14.0",
+    "react-redux": "^7.2.3",
+    "react-select": "^4.3.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
     "@types/react": "^17.0.2",
+    "@types/react-datepicker": "^3.1.8",
     "@types/react-dom": "^17.0.1",
+    "@types/react-input-mask": "^3.0.0",
+    "@types/react-select": "^4.0.14",
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.9",
+    "tailwindcss": "^2.0.4",
     "typescript": "4.0"
   },
   "license": "MIT"

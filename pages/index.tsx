@@ -1,15 +1,13 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { Form } from "components/Form";
+import Layout from "components/Layout";
 
 const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
+  <Layout>
+    <div className="container mx-auto px-4">
+      <h1 className="text-center my-8 font-bold">Next js with Tailwind css </h1>
+      <Form />
+    </div>
   </Layout>
-)
+);
 
-export default IndexPage
+export default IndexPage;
