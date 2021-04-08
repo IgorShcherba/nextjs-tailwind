@@ -57,8 +57,6 @@ export const Form: React.FC = () => {
     console.log("form Data", data);
   });
 
-  console.log("errors", errors);
-
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-wrap md:flex-nowrap md:space-x-4 ">
@@ -106,6 +104,7 @@ export const Form: React.FC = () => {
                     placeholderText="Choose date please"
                     onChange={(e) => field.onChange(e)}
                     selected={field.value}
+                    strictParsing
                   />
 
                   {errors?.reactDatepicker && (

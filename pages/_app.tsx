@@ -2,12 +2,16 @@ import "tailwindcss/tailwind.css";
 
 // import App from "next/app";
 import type { AppProps /*, AppContext */ } from "next/app";
-
+import { Provider } from "next-auth/client";
 import "react-datepicker/dist/react-datepicker.css";
 import "../style.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <Provider session={pageProps.session}>
+      <Component {...pageProps} />
+    </Provider>
+  );
 }
 
 // Only uncomment this method if you have blocking data requirements for
