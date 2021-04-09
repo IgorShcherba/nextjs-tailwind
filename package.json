@@ -9,11 +9,13 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.0.0",
+    "@prisma/client": "^2.20.1",
     "date-fns": "^2.19.0",
     "js-cookie": "^2.2.1",
     "next": "latest",
     "next-auth": "^3.14.0",
     "pg": "^8.5.1",
+    "prisma": "2.20.1",
     "react": "^17.0.1",
     "react-datepicker": "^3.7.0",
     "react-dom": "^17.0.1",

@@ -5,18 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { useSession } from "next-auth/client";
 import { Chat } from "components/Chat";
 import { useChat } from "hooks/useChat";
-
-type User = {
-  name: string;
-  connectionTime: string;
-  id: string;
-};
-
-type Message = {
-  createdAt: string;
-  user: User;
-  msg: string;
-};
+import { Message } from "interfaces";
 
 const ChatPage = () => {
   const [session] = useSession();
@@ -25,24 +14,25 @@ const ChatPage = () => {
 
   const { isConnected, send } = useChat({
     onMessage: (data) => {
+      console.log("data", data);
       setMessages((prev) => [...prev, data]);
       scrollContainerRef.current?.scrollIntoView({ behavior: "smooth" });
     },
   });
 
   const handleSend = (message: string) => {
-    send(message);
+    send(message, session?.user.id as number);
   };
 
   return (
     <Layout>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-xl">
         <h1 className="text-center my-8 font-bold">Socket.io</h1>
         {isConnected ? (
           <Chat
             ref={scrollContainerRef}
             messages={messages}
-            userId={session?.user.name!}
+            userId={session?.user.id as number}
             onSend={handleSend}
           />
         ) : (

@@ -1,16 +1,10 @@
 import { useSession } from "next-auth/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
 import { toast } from "react-toastify";
-import {
-  DISCONNECT_EVENT,
-  LOGIN_EVENT,
-  MESSAGE_EVENT,
-} from "constants/socket-events";
+import { LOGIN_EVENT, MESSAGE_EVENT } from "constants/socket-events";
 import { Message } from "interfaces";
-
-const socket = io();
 
 type Props = {
   onMessage?: (data: Message) => void;
@@ -22,14 +16,16 @@ export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
   const [session] = useSession();
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
+  const sockerRef = useRef();
+  sockerRef.current = io();
 
-  const send = (message: string) => {
-    socket.emit(MESSAGE_EVENT, message);
+  const send = (message: string, userId: number) => {
+    sockerRef.current?.emit(MESSAGE_EVENT, { message, userId });
   };
 
   useEffect(() => {
     if (!session) return;
-
+    const socket = sockerRef.current;
     const createWsConnection = async () => {
       try {
         if (error) setError(null);
@@ -41,17 +37,17 @@ export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
       }
       onConnect?.();
       setIsConnected(true);
-      socket.emit(LOGIN_EVENT, session?.user.name);
+      socket.emit(LOGIN_EVENT, { ...session.user });
 
       socket.on(MESSAGE_EVENT, (data: Message) => {
         onMessage?.(data);
       });
 
-      socket.on(LOGIN_EVENT, (user) => {
-        toast(`${user.name} is connected!`, { toastId: user.id });
+      socket.on(LOGIN_EVENT, (name) => {
+        toast(`${name} is connected!`);
       });
 
-      socket.on(DISCONNECT_EVENT, () => {});
+      // socket.on(DISCONNECT_EVENT, () => {});
     };
 
     createWsConnection();
@@ -60,6 +56,7 @@ export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
       setIsConnected(false);
       socket.disconnect();
       onDisconnect?.();
+      socket.current = null;
     };
   }, [error, session]);
 

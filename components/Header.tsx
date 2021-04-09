@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
     signOut();
     onSignout?.();
   };
-
+  console.log("Session", session);
   return (
     <header className="py-4 flex justify-between">
       <div className="container px-4 mx-auto flex justify-between">

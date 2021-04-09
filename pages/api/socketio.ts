@@ -1,4 +1,4 @@
-import { UserData } from "interfaces/index";
+import { User, MessageData } from "interfaces/index";
 import { Server } from "socket.io";
 
 import {
@@ -7,8 +7,7 @@ import {
   LOGIN_EVENT,
 } from "constants/socket-events";
 import { format } from "date-fns";
-
-const DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+import { DATE_FORMAT } from "constants/index";
 
 let users = new Map();
 
@@ -17,23 +16,25 @@ const ioHandler = (_: any, res: any) => {
     const io = new Server(res.socket.server);
 
     io.on(CONNECT_EVENT, (socket) => {
-      socket.on(MESSAGE_EVENT, (msg: string) => {
+      socket.on(MESSAGE_EVENT, ({ message, userId }) => {
         io.emit(MESSAGE_EVENT, {
-          user: users.get(socket.id),
-          msg,
+          user: { name: users.get(userId).user.name, id: userId },
+          message,
           createdAt: format(new Date(), DATE_FORMAT),
         });
       });
 
-      socket.on(LOGIN_EVENT, (userName: string) => {
-        const userData: UserData = {
-          id: socket.id,
-          name: userName,
+      socket.on(LOGIN_EVENT, (user: User) => {
+        if (users.has(user.id)) return;
+
+        const userData: MessageData = {
+          id: user.id,
+          user,
           connectionTime: format(new Date(), DATE_FORMAT),
         };
 
-        socket.broadcast.emit(LOGIN_EVENT, userData);
-        users.set(socket.id, userData);
+        socket.broadcast.emit(LOGIN_EVENT, user.name);
+        users.set(user.id, userData);
 
         console.log("users", users);
       });
@@ -46,10 +47,10 @@ const ioHandler = (_: any, res: any) => {
   res.end();
 };
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export default ioHandler;

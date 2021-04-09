@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import Providers from "next-auth/providers";
+import Adapters from "next-auth/adapters";
+import prisma from "lib/prisma";
 
 const options = {
   providers: [
@@ -13,18 +15,20 @@ const options = {
       clientId: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
-    Providers.Facebook({
-      clientId: process.env.FACEBOOK_ID!,
-      clientSecret: process.env.FACEBOOK_SECRET!,
-    }),
+    // Providers.Facebook({
+    //   clientId: process.env.FACEBOOK_ID!,
+    //   clientSecret: process.env.FACEBOOK_SECRET!,
+    // }),
   ],
-  database: {
-    type: "postgres",
-    host: process.env.DATABASE_HOST ?? "127.0.0.1",
-    port: process.env.DATABASE_PORT ?? "5432",
-    username: process.env.DATABASE_USER ?? "igor",
-    password: process.env.DATABASE_PASSWORD ?? "qwerty",
-    database: process.env.DATABASE_NAME ?? "test-db",
+  adapter: Adapters.Prisma.Adapter({ prisma }),
+  callbacks: {
+    async session(session: Session, user: any) {
+      // expose user id
+      return Promise.resolve({
+        ...session,
+        user: { ...session.user, id: user.id },
+      });
+    },
   },
 };
 

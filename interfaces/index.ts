@@ -3,14 +3,21 @@
 // example, to import the interface below do:
 //
 
-export type UserData = {
-  id: string;
-  name: string;
+export type MessageData = {
+  id: number;
   connectionTime: string;
+  user: User;
+};
+
+export type User = {
+  email: string | null;
+  id: number;
+  image: string;
+  name: string;
 };
 
 export type Message = {
   createdAt: string;
-  user: UserData;
-  msg: string;
+  user: { id: number; name: string };
+  message: string;
 };
