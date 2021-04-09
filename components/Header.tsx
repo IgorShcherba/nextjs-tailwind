@@ -3,17 +3,22 @@ import NextLink from "next/link";
 import { useSession, signIn, signOut } from "next-auth/client";
 import { Button } from "./Button";
 
-export const Header: React.FC = () => {
-  const [session] = useSession();
+type HeaderProps = {
+  onSignin?: () => void;
+  onSignout?: () => void;
+};
 
-  console.log("session", session);
+export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
+  const [session] = useSession();
 
   const handleSignin = () => {
     signIn();
+    onSignin?.();
   };
 
   const handleSignout = () => {
     signOut();
+    onSignout?.();
   };
 
   return (
@@ -42,12 +47,7 @@ export const Header: React.FC = () => {
         )}
 
         {session && (
-          <Button
-            color="danger"
-            size="sm"
-            className="ml-2"
-            onClick={handleSignout}
-          >
+          <Button size="sm" className="ml-2" onClick={handleSignout}>
             Sign out
           </Button>
         )}
