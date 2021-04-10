@@ -2,6 +2,7 @@ import React from "react";
 import NextLink from "next/link";
 import { useSession, signIn, signOut } from "next-auth/client";
 import { Button } from "./Button";
+import { Container } from "./Container";
 
 type HeaderProps = {
   onSignin?: () => void;
@@ -20,10 +21,10 @@ export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
     signOut();
     onSignout?.();
   };
-  console.log("Session", session);
+
   return (
     <header className="py-4 flex justify-between">
-      <div className="container px-4 mx-auto flex justify-between">
+      <Container className="flex items-center justify-between">
         {session && (
           <div className="flex items-center">
             <img
@@ -51,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
             Sign out
           </Button>
         )}
-      </div>
+      </Container>
     </header>
   );
 };

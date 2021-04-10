@@ -1,6 +1,6 @@
+import prisma from "lib/prisma";
 import { User, MessageData } from "interfaces/index";
 import { Server } from "socket.io";
-
 import {
   MESSAGE_EVENT,
   CONNECT_EVENT,
@@ -11,17 +11,35 @@ import { DATE_FORMAT } from "constants/index";
 
 let users = new Map();
 
+const createMessageService = async (data: any) => {
+  const { message, user } = data;
+
+  const result = await prisma.message.create({
+    data: {
+      content: message,
+      author: { connect: { id: user.id } },
+      published: true,
+    },
+  });
+  return result;
+};
+
 const ioHandler = (_: any, res: any) => {
   if (!res.socket.server.io) {
     const io = new Server(res.socket.server);
 
     io.on(CONNECT_EVENT, (socket) => {
-      socket.on(MESSAGE_EVENT, ({ message, userId }) => {
-        io.emit(MESSAGE_EVENT, {
+      socket.on(MESSAGE_EVENT, async ({ message, userId }) => {
+        const data = {
           user: { name: users.get(userId).user.name, id: userId },
           message,
           createdAt: format(new Date(), DATE_FORMAT),
-        });
+        };
+
+        const entity = await createMessageService(data);
+
+        console.log("entitty", entity);
+        io.emit(MESSAGE_EVENT, data);
       });
 
       socket.on(LOGIN_EVENT, (user: User) => {
@@ -47,10 +65,10 @@ const ioHandler = (_: any, res: any) => {
   res.end();
 };
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default ioHandler;

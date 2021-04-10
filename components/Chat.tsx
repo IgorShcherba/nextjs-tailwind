@@ -14,8 +14,10 @@ type Ref = HTMLDivElement;
 export const Chat = forwardRef<Ref, ChatProps>(
   ({ messages, userId, onSend }, ref: ForwardedRef<HTMLDivElement | null>) => {
     const [inputValue, setInputValue] = useState<string>("");
+
     const handleSend = (e: SyntheticEvent) => {
       e.preventDefault();
+
       if (inputValue.trim()) {
         onSend(inputValue);
         setInputValue("");
@@ -24,7 +26,7 @@ export const Chat = forwardRef<Ref, ChatProps>(
 
     return (
       <>
-        <div className="bg-gray-50 h-72 p-6 overflow-y-auto overflow-x-hidden relative">
+        <div className="bg-gray-50 h-52 md:h-80 p-6 overflow-y-auto overflow-x-hidden relative">
           <ul className="flex flex-col items-start space-y-8">
             {messages.map(
               ({ createdAt, message, user: { name, id } }: Message) => {

@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 
 import Layout from "components/Layout";
 import { fetcher } from "utils/fetcher";
-import { GetServerSideProps } from "next";
-import { ensureAuth } from "hoc/ensureAuth";
+import withAuthentication from "hocs/withAuthentication";
+import { Container } from "components/Container";
 
 const AccountPage = () => {
   const [data, setData] = useState<{ content?: string }>({});
 
   useEffect(() => {
     const getUserSecretData = async () => {
-      const json = await fetcher("/api/secret");
+      try {
+        const json = await fetcher("/secret");
 
-      if (json.content) {
-        setData(json);
+        if (json.content) {
+          setData(json);
+        }
+      } catch (err) {
+        // TODO: setError
+        console.log("err", err);
       }
     };
 
@@ -22,17 +27,13 @@ const AccountPage = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4">
+      <Container>
         <h1 className="text-center my-8 font-bold">UserAccount page</h1>
 
         <p className="my-4">{data?.content}</p>
-      </div>
+      </Container>
     </Layout>
   );
 };
 
-export default AccountPage;
-
-export const getServerSideProps: GetServerSideProps = ensureAuth(async () => {
-  return { props: {} };
-});
+export default withAuthentication(AccountPage);

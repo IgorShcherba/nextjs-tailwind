@@ -1,11 +1,35 @@
-import { useState, useRef } from "react";
-import Layout from "components/Layout";
+import { useState, useRef, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
 import { useSession } from "next-auth/client";
+import Layout from "components/Layout";
 import { Chat } from "components/Chat";
+import { Container } from "components/Container";
 import { useChat } from "hooks/useChat";
 import { Message } from "interfaces";
+import { fetcher } from "utils/fetcher";
+import { Prisma } from ".prisma/client";
+import { format, parseISO } from "date-fns";
+import { DATE_FORMAT } from "constants/index";
+import withAuthentication from "hocs/withAuthentication";
+
+type MessagesWithUser = {
+  id: number;
+  content: string;
+  createdAt: string;
+  author: Prisma.UserCreateInput;
+  authorId: number;
+};
+
+type InitMessages = Array<MessagesWithUser>;
+
+const normalizeInitialMessages = (initData: InitMessages = []) => {
+  return initData.map((item) => ({
+    createdAt: format(parseISO(item.createdAt), DATE_FORMAT),
+    message: item.content,
+    user: { id: item?.authorId, name: item.author.name! },
+  }));
+};
 
 const ChatPage = () => {
   const [session] = useSession();
@@ -14,9 +38,7 @@ const ChatPage = () => {
 
   const { isConnected, send } = useChat({
     onMessage: (data) => {
-      console.log("data", data);
       setMessages((prev) => [...prev, data]);
-      scrollContainerRef.current?.scrollIntoView({ behavior: "smooth" });
     },
   });
 
@@ -24,9 +46,28 @@ const ChatPage = () => {
     send(message, session?.user.id as number);
   };
 
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const data = await fetcher("/messages");
+        setMessages(normalizeInitialMessages(data));
+      } catch (err) {
+        // TODO: error handling
+        console.log("err", err);
+      }
+    };
+    getMessages();
+  }, []);
+
+  useEffect(() => {
+    if (messages.length < 1) return;
+
+    scrollContainerRef.current?.scrollIntoView();
+  }, [messages]);
+
   return (
     <Layout>
-      <div className="container mx-auto px-4 max-w-xl">
+      <Container className="max-w-xl">
         <h1 className="text-center my-8 font-bold">Socket.io</h1>
         {isConnected ? (
           <Chat
@@ -38,11 +79,11 @@ const ChatPage = () => {
         ) : (
           "Connecting ..."
         )}
-      </div>
+      </Container>
 
       <ToastContainer />
     </Layout>
   );
 };
 
-export default ChatPage;
+export default withAuthentication(ChatPage);

@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN ["npx", "prisma", "generate"]
+
+RUN ["npx", "prisma", "db", "push", "--preview-feature"]
 
 CMD ["npm", "run", "dev"]

@@ -1,10 +1,11 @@
 import { useSession } from "next-auth/client";
 import { useEffect, useRef, useState } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 import { toast } from "react-toastify";
 import { LOGIN_EVENT, MESSAGE_EVENT } from "constants/socket-events";
 import { Message } from "interfaces";
+import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 
 type Props = {
   onMessage?: (data: Message) => void;
@@ -15,9 +16,7 @@ type Props = {
 export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
   const [session] = useSession();
   const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState(null);
-  const sockerRef = useRef();
-  sockerRef.current = io();
+  const sockerRef = useRef<Socket<DefaultEventsMap, DefaultEventsMap>>();
 
   const send = (message: string, userId: number) => {
     sockerRef.current?.emit(MESSAGE_EVENT, { message, userId });
@@ -25,40 +24,35 @@ export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
 
   useEffect(() => {
     if (!session) return;
-    const socket = sockerRef.current;
+
+    sockerRef.current = io();
+    let socket = sockerRef.current;
+
     const createWsConnection = async () => {
-      try {
-        if (error) setError(null);
-        await fetch("/api/socketio");
-      } catch (err) {
-        setError(err);
-        toast("Something went wrong! Please, try again.");
-        return;
-      }
-      onConnect?.();
-      setIsConnected(true);
-      socket.emit(LOGIN_EVENT, { ...session.user });
+      fetch("/api/socketio").finally(() => {
+        onConnect?.();
 
-      socket.on(MESSAGE_EVENT, (data: Message) => {
-        onMessage?.(data);
+        setIsConnected(true);
+        socket?.emit(LOGIN_EVENT, { ...session.user });
+
+        socket?.on(MESSAGE_EVENT, (data: Message) => {
+          onMessage?.(data);
+        });
+
+        socket?.on(LOGIN_EVENT, (name) => {
+          toast(`${name} is connected!`);
+        });
       });
-
-      socket.on(LOGIN_EVENT, (name) => {
-        toast(`${name} is connected!`);
-      });
-
-      // socket.on(DISCONNECT_EVENT, () => {});
     };
 
     createWsConnection();
 
     return () => {
       setIsConnected(false);
-      socket.disconnect();
+      socket?.disconnect();
       onDisconnect?.();
-      socket.current = null;
     };
-  }, [error, session]);
+  }, [session]);
 
-  return { isConnected, error, send };
+  return { isConnected, send };
 };
