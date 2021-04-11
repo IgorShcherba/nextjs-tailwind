@@ -11,7 +11,10 @@ import { DATE_FORMAT } from "constants/index";
 
 let users = new Map();
 
-const createMessageService = async (data: any) => {
+const createMessageService = async (data: {
+  user: { name: string; id: number };
+  message: string;
+}) => {
   const { message, user } = data;
 
   const result = await prisma.message.create({
@@ -36,9 +39,8 @@ const ioHandler = (_: any, res: any) => {
           createdAt: format(new Date(), DATE_FORMAT),
         };
 
-        const entity = await createMessageService(data);
+        await createMessageService(data);
 
-        console.log("entitty", entity);
         io.emit(MESSAGE_EVENT, data);
       });
 
@@ -53,14 +55,10 @@ const ioHandler = (_: any, res: any) => {
 
         socket.broadcast.emit(LOGIN_EVENT, user.name);
         users.set(user.id, userData);
-
-        console.log("users", users);
       });
     });
 
     res.socket.server.io = io;
-  } else {
-    console.log("socket.io already running");
   }
   res.end();
 };

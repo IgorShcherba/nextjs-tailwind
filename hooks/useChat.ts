@@ -52,6 +52,7 @@ export const useChat = ({ onMessage, onConnect, onDisconnect }: Props) => {
       socket?.disconnect();
       onDisconnect?.();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   return { isConnected, send };

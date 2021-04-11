@@ -18,7 +18,6 @@ const AccountPage = () => {
         }
       } catch (err) {
         // TODO: setError
-        console.log("err", err);
       }
     };
 

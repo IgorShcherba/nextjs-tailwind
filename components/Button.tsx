@@ -19,7 +19,15 @@ type ButtonSizes = {
 
 type ButtonRef = React.ForwardedRef<HTMLButtonElement>;
 
-const colors = (rounded?: boolean): any => ({
+type Colors = {
+  primary: string;
+  success: string;
+  danger: string;
+  dark: string;
+  warning: string;
+};
+
+const colors = (rounded?: boolean): Colors => ({
   primary: `${
     rounded
       ? "border-blue-700 border-2 text-blue-700 active:bg-blue-700 active:text-white"

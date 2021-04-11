@@ -8,10 +8,10 @@ import { Container } from "components/Container";
 import { useChat } from "hooks/useChat";
 import { Message } from "interfaces";
 import { fetcher } from "utils/fetcher";
-import { Prisma } from ".prisma/client";
 import { format, parseISO } from "date-fns";
 import { DATE_FORMAT } from "constants/index";
 import withAuthentication from "hocs/withAuthentication";
+import { Prisma } from ".prisma/client";
 
 type MessagesWithUser = {
   id: number;
@@ -23,13 +23,12 @@ type MessagesWithUser = {
 
 type InitMessages = Array<MessagesWithUser>;
 
-const normalizeInitialMessages = (initData: InitMessages = []) => {
-  return initData.map((item) => ({
+const normalizeInitialMessages = (initData: InitMessages = []) =>
+  initData.map((item) => ({
     createdAt: format(parseISO(item.createdAt), DATE_FORMAT),
     message: item.content,
-    user: { id: item?.authorId, name: item.author.name! },
+    user: { id: item?.authorId, name: item.author.name },
   }));
-};
 
 const ChatPage = () => {
   const [session] = useSession();
@@ -53,7 +52,6 @@ const ChatPage = () => {
         setMessages(normalizeInitialMessages(data));
       } catch (err) {
         // TODO: error handling
-        console.log("err", err);
       }
     };
     getMessages();
@@ -63,7 +61,7 @@ const ChatPage = () => {
     if (messages.length < 1) return;
 
     scrollContainerRef.current?.scrollIntoView();
-  }, [messages]);
+  }, [messages.length]);
 
   return (
     <Layout>

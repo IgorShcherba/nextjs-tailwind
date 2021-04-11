@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import NextAuth, { Session } from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 import prisma from "lib/prisma";
@@ -8,12 +8,12 @@ import prisma from "lib/prisma";
 const options = {
   providers: [
     Providers.GitHub({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
     Providers.Google({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
@@ -22,7 +22,7 @@ const options = {
       // expose user id
       return Promise.resolve({
         ...session,
-        user: { ...session.user, id: user.id },
+        user: { ...session.user, id: user?.id },
       });
     },
   },

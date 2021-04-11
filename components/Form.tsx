@@ -53,8 +53,8 @@ export const Form: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(validationSchema) });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log("form Data", data);
+  const onSubmit = handleSubmit(() => {
+    // console.log("form Data", data);
   });
 
   return (
@@ -78,7 +78,7 @@ export const Form: React.FC = () => {
               return (
                 <div>
                   <label htmlFor="phoneNumber">react-phone-input</label>
-                  <PhoneInput country={"us"} {...props.field} />
+                  <PhoneInput country="us" {...props.field} />
 
                   {errors?.phoneNumber && (
                     <p className="text-red-500 text-sm">

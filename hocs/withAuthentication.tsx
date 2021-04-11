@@ -17,7 +17,7 @@ const withAuthentication = (WrappedComponent: React.FC) => {
     useEffect(() => {
       if (loading) return;
       if (!session) router.push("/");
-    }, [session, loading]);
+    }, [session, loading, router]);
 
     return session ? <WrappedComponent {...props} /> : null;
   };

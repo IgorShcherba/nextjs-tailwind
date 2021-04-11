@@ -28,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
         {session && (
           <div className="flex items-center">
             <img
+              alt=""
               src={`${session.user?.image}`}
               className="rounded-full object-cover mr-2 w-10 h-auto"
             />
