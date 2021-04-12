@@ -1,4 +1,5 @@
 import React from "react";
+import { classNames } from "utils/classNames";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -28,35 +29,33 @@ type Colors = {
 };
 
 const colors = (rounded?: boolean): Colors => ({
-  primary: `${
+  primary: classNames(
     rounded
       ? "border-blue-700 border-2 text-blue-700 active:bg-blue-700 active:text-white"
       : "bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:ring-offset-blue-200"
-  } `,
+  ),
 
-  success: `${
+  success: classNames(
     rounded
       ? "border-green-700 border-2 text-green-700 active:bg-green-700 active:text-white"
       : "bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-700 focus:ring-offset-green-200"
-  }`,
+  ),
 
-  danger: `${
+  danger: classNames(
     rounded
       ? "border-red-600 border-2 text-red-600 active:bg-red-600 active:text-white"
       : "bg-red-600 focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:ring-offset-red-200"
-  } `,
-
-  dark: `${
+  ),
+  dark: classNames(
     rounded
       ? "border-black border-2 text-gray-900 active:bg-black active:text-white"
       : "bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 focus:ring-offset-gray-200"
-  } `,
-
-  warning: `${
+  ),
+  warning: classNames(
     rounded
       ? "border-yellow-500 border-2 text-yellow-500 active:bg-yellow-500 active:text-white"
       : "bg-yellow-500 focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 focus:ring-offset-yellow-200"
-  } `,
+  ),
 });
 
 const sizes: ButtonSizes = {
@@ -87,15 +86,24 @@ export const Button = React.forwardRef(
         {...props}
         type={submit ? "submit" : "button"}
         disabled={disabled}
-        className={`${isFullwidth ? "flex justify-center w-full" : ""} 
-            ${disabled ? "opacity-60 cursor-not-allowed" : ""} 
-            ${color ? colors(outline)[color] : colors(outline).dark} 
-            ${size ? sizes[size] : sizes.md}  
-            ${rounded ? "rounded-full" : "rounded-md"} ${className} 
-          text-white focus:outline-none shadow font-medium transition ease-in duration-200`}
+        className={classNames(
+          isFullwidth && "flex justify-center w-full",
+          disabled && "opacity-60 cursor-not-allowed",
+          color && colors(outline)[color],
+          size && sizes[size],
+          rounded ? "rounded-full" : "rounded-md",
+          className,
+          "text-white focus:outline-none shadow font-medium transition ease-in duration-200"
+        )}
       >
         {children}
       </button>
     );
   }
 );
+
+Button.defaultProps = {
+  size: "md",
+  color: "dark",
+  rounded: false,
+};

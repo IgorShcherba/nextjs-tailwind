@@ -1,4 +1,4 @@
-import { Message } from "interfaces";
+import { Message } from "types";
 import { useState, forwardRef, ForwardedRef, SyntheticEvent } from "react";
 import { Button } from "./Button";
 import Input from "./Input";

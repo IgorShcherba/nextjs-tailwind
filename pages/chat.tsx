@@ -6,7 +6,7 @@ import Layout from "components/Layout";
 import { Chat } from "components/Chat";
 import { Container } from "components/Container";
 import { useChat } from "hooks/useChat";
-import { Message } from "interfaces";
+import { Message } from "types";
 import { fetcher } from "utils/fetcher";
 import { format, parseISO } from "date-fns";
 import { DATE_FORMAT } from "constants/index";

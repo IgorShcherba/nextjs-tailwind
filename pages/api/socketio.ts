@@ -1,5 +1,5 @@
 import prisma from "lib/prisma";
-import { User, MessageData } from "interfaces/index";
+import { User, MessageData } from "types/index";
 import { Server } from "socket.io";
 import {
   MESSAGE_EVENT,

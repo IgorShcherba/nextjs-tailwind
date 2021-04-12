@@ -1,3 +1,5 @@
+import { classNames } from "utils/classNames";
+
 type ContainerProps = {
   className?: string;
 };
@@ -7,7 +9,7 @@ export const Container: React.FC<ContainerProps> = ({
   className,
 }) => {
   return (
-    <div className={`container px-4 mx-auto ${className ?? ""}`}>
+    <div className={classNames("container px-4 mx-auto", className)}>
       {children}
     </div>
   );

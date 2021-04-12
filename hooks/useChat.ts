@@ -4,7 +4,7 @@ import io, { Socket } from "socket.io-client";
 
 import { toast } from "react-toastify";
 import { LOGIN_EVENT, MESSAGE_EVENT } from "constants/socket-events";
-import { Message } from "interfaces";
+import { Message } from "types";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 
 type Props = {

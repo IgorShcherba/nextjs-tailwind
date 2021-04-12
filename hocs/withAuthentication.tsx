@@ -4,9 +4,6 @@ import React, { useEffect } from "react";
 
 /**
  * An Example of the client-side 'securing' logic
- *
- * @param WrappedComponent React Component
- * @returns React Component
  */
 
 const withAuthentication = (WrappedComponent: React.FC) => {
