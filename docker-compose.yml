@@ -27,6 +27,10 @@ services:
       - postgres
     networks:
       - next-auth-net
+    volumes:
+      - ./pages:/usr/src/app/pages
+      - ./@:/app/@
+      - ./public:/usr/src/app.public
 
 volumes:
   next-auth-data:

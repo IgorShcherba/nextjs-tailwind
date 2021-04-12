@@ -66,7 +66,7 @@ const ChatPage = () => {
   return (
     <Layout>
       <Container className="max-w-xl">
-        <h1 className="text-center my-8 font-bold">Socket.io</h1>
+        <h1 className="text-center my-8 font-bold">Socvket.io</h1>
         {isConnected ? (
           <Chat
             ref={scrollContainerRef}
