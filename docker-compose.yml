@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   postgres:
@@ -9,7 +9,6 @@ services:
       - POSTGRES_USER=prisma
       - POSTGRES_PASSWORD=qwerty
       - POSTGRES_DB=prisma
-
     networks:
       - next-auth-net
     volumes:
@@ -19,10 +18,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: web
-    restart: always
+    # restart: always
     ports:
       - 3000:3000
     env_file: .env
+    command:  sh -c 'npx prisma db push --preview-feature && npm run dev'
     depends_on:
       - postgres
     networks:

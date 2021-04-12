@@ -10,6 +10,6 @@ COPY . .
 
 RUN ["npx", "prisma", "generate"]
 
-RUN ["npx", "prisma", "db", "push", "--preview-feature"]
+# RUN ["npx", "prisma", "db", "push", "--preview-feature"]
 
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
