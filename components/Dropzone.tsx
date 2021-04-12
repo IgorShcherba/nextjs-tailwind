@@ -27,7 +27,7 @@ export const Dropzone = React.forwardRef(
 
     return (
       <>
-        <label>{labelText}</label>
+        <label htmlFor="dropzone">{labelText}</label>
         <div
           {...getRootProps({ ref })}
           className="w-full p-10 border border-dashed border-indigo-500 text-center"

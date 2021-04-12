@@ -2,26 +2,33 @@ import React from "react";
 import NextLink from "next/link";
 import { useSession, signIn, signOut } from "next-auth/client";
 import { Button } from "./Button";
+import { Container } from "./Container";
 
-export const Header: React.FC = () => {
+type HeaderProps = {
+  onSignin?: () => void;
+  onSignout?: () => void;
+};
+
+export const Header: React.FC<HeaderProps> = ({ onSignin, onSignout }) => {
   const [session] = useSession();
-
-  console.log("session", session);
 
   const handleSignin = () => {
     signIn();
+    onSignin?.();
   };
 
   const handleSignout = () => {
     signOut();
+    onSignout?.();
   };
 
   return (
     <header className="py-4 flex justify-between">
-      <div className="container px-4 mx-auto flex justify-between">
+      <Container className="flex items-center justify-between">
         {session && (
           <div className="flex items-center">
             <img
+              alt=""
               src={`${session.user?.image}`}
               className="rounded-full object-cover mr-2 w-10 h-auto"
             />
@@ -42,16 +49,11 @@ export const Header: React.FC = () => {
         )}
 
         {session && (
-          <Button
-            color="danger"
-            size="sm"
-            className="ml-2"
-            onClick={handleSignout}
-          >
+          <Button size="sm" className="ml-2" onClick={handleSignout}>
             Sign out
           </Button>
         )}
-      </div>
+      </Container>
     </header>
   );
 };

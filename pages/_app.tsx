@@ -1,9 +1,10 @@
 import "tailwindcss/tailwind.css";
 
 // import App from "next/app";
-import type { AppProps /*, AppContext */ } from "next/app";
+import type { AppProps } from "next/app";
 import { Provider } from "next-auth/client";
 import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
 import "../style.css";
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -1,0 +1,25 @@
+import { useSession } from "next-auth/client";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+
+/**
+ * An Example of the client-side 'securing' logic
+ */
+
+const withAuthentication = (WrappedComponent: React.FC) => {
+  const RequiresAuthentication = (props: any) => {
+    const [session, loading] = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+      if (loading) return;
+      if (!session) router.push("/");
+    }, [session, loading, router]);
+
+    return session ? <WrappedComponent {...props} /> : null;
+  };
+
+  return RequiresAuthentication;
+};
+
+export default withAuthentication;

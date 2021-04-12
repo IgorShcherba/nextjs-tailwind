@@ -2,12 +2,14 @@ FROM node:15.13.0-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json yarn.lock ./
 
-RUN npm install
+RUN yarn
 
 COPY . .
 
-RUN npm run build
+RUN ["npx", "prisma", "generate"]
 
-CMD ["npm", "run", "dev"]
+# RUN ["npx", "prisma", "db", "push", "--preview-feature"]
+
+# CMD ["npm", "run", "dev"]
